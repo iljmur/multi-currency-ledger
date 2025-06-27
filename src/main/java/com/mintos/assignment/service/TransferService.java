@@ -38,25 +38,31 @@ public class TransferService {
         Currency sourceCurrency = source.getCurrency();
         Currency targetCurrency = target.getCurrency();
 
-        if (!requestCurrency.equals(targetCurrency)) {
-            throw new ApiException("Transfer currency must match receiver's account currency");
+        // Check that request currency matches source account currency
+        if (!requestCurrency.equals(sourceCurrency)) {
+            throw new ApiException(String.format(
+                "Requested transfer currency [%s] must match source account's currency [%s]",
+                requestCurrency.getCurrencyCode(), sourceCurrency.getCurrencyCode()
+            ));
         }
 
-        BigDecimal amountInSourceCurrency = requestCurrency.equals(sourceCurrency)
+        // Convert amount if target has different currency
+        BigDecimal amountInTargetCurrency = requestCurrency.equals(targetCurrency)
             ? amount
-            : currencyConversionService.convert(amount, requestCurrency, sourceCurrency);
+            : currencyConversionService.convert(amount, requestCurrency, targetCurrency);
 
-        accountService.withdraw(source, amountInSourceCurrency);
-        accountService.deposit(target, amount);
+        accountService.withdraw(source, amount);
+        accountService.deposit(target, amountInTargetCurrency);
 
         Transaction transaction = new Transaction(
             UUID.randomUUID(),
             source.getId(),
             target.getId(),
             amount,
-            targetCurrency,
+            requestCurrency,
             Instant.now()
         );
+
         transactionService.record(transaction);
     }
 }
