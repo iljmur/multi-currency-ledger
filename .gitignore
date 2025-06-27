@@ -1,0 +1,30 @@
+# Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDE config
+*.swp
+*.swo
+*.bak
+
+# Test reports
+/test-output/
+/surefire-reports/
+/jacoco.exec
+
+# Local environment files
+.env
