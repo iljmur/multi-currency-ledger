@@ -2,7 +2,7 @@ package com.mintos.assignment.service;
 
 import com.mintos.assignment.domain.model.Client;
 import com.mintos.assignment.domain.repository.ClientRepository;
-import com.mintos.assignment.exception.ApiException;
+import com.mintos.assignment.exception.ClientNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,6 +18,6 @@ public class ClientService {
 
     public Client getClient(UUID clientId) {
         return clientRepository.findById(clientId)
-            .orElseThrow(() -> new ApiException("Client not found: " + clientId));
+            .orElseThrow(() -> new ClientNotFoundException("Client not found: " + clientId));
     }
 }

@@ -2,7 +2,9 @@ package com.mintos.assignment.service;
 
 import com.mintos.assignment.domain.model.Account;
 import com.mintos.assignment.domain.repository.AccountRepository;
+import com.mintos.assignment.exception.AccountNotFoundException;
 import com.mintos.assignment.exception.ApiException;
+import com.mintos.assignment.exception.InsufficientFundsException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +22,7 @@ public class AccountService {
 
     public Account getAccount(UUID accountId) {
         return accountRepository.findById(accountId)
-            .orElseThrow(() -> new ApiException("Account not found: " + accountId));
+            .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountId));
     }
 
     public List<Account> getAccountsByClientId(UUID clientId) {
@@ -28,6 +30,9 @@ public class AccountService {
     }
 
     public void withdraw(Account account, BigDecimal amount) {
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException("Insufficient funds for withdrawal");
+        }
         account.withdraw(amount);
         accountRepository.save(account);
     }

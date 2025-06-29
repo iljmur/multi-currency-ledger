@@ -59,7 +59,7 @@ SELECT * FROM account;
 ## 📦 Features
 - Account and client management
 - Transaction history with pagination
-- Currency conversion (external API via exchangerate.host)
+- Currency conversion (external API via frankfurter.app)
 - H2 in-memory database with preloaded demo data (Alice, Bob, Eve)
 - Resilience with retry handling for external services
 - Swagger UI for API testing and documentation
@@ -78,7 +78,6 @@ At startup, the application creates 3 clients:
 - Bob (EUR, USD, CHF accounts)
 - Eve (EUR, USD, CHF accounts)
 
-Each account has a non-zero balance and can be used for testing transfers.
+Each account has a non-negative balance and can be used for testing transfers.
 
 ---
-

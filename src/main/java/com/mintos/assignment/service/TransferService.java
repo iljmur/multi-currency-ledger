@@ -3,6 +3,7 @@ package com.mintos.assignment.service;
 import com.mintos.assignment.domain.model.Account;
 import com.mintos.assignment.domain.model.Transaction;
 import com.mintos.assignment.exception.ApiException;
+import com.mintos.assignment.exception.InvalidTransferException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class TransferService {
     @Transactional
     public void transfer(UUID fromAccountId, UUID toAccountId, BigDecimal amount, Currency requestCurrency) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ApiException("Transfer amount must be positive");
+            throw new InvalidTransferException("Transfer amount must be positive");
         }
 
         Account source = accountService.getAccount(fromAccountId);
@@ -40,7 +41,7 @@ public class TransferService {
 
         // Check that request currency matches source account currency
         if (!requestCurrency.equals(sourceCurrency)) {
-            throw new ApiException(String.format(
+            throw new InvalidTransferException(String.format(
                 "Requested transfer currency [%s] must match source account's currency [%s]",
                 requestCurrency.getCurrencyCode(), sourceCurrency.getCurrencyCode()
             ));

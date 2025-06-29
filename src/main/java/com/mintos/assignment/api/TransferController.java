@@ -49,7 +49,7 @@ public class TransferController {
         @NotNull UUID toAccountId,
 
         @Parameter(description = "Amount to transfer", required = true, example = "100.00")
-        @NotNull @DecimalMin("0.01") BigDecimal amount,
+        @NotNull BigDecimal amount,
 
         @Parameter(description = "Currency code (e.g., EUR, USD, CHF)", required = true)
         @NotNull String currency

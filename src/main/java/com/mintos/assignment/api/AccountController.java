@@ -2,6 +2,7 @@ package com.mintos.assignment.api;
 
 import com.mintos.assignment.domain.model.Account;
 import com.mintos.assignment.domain.model.Transaction;
+import com.mintos.assignment.exception.AccountNotFoundException;
 import com.mintos.assignment.service.AccountService;
 import com.mintos.assignment.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,11 @@ public class AccountController {
     public List<Account> getAccountsByClient(
         @PathVariable UUID clientId
     ) {
-        return accountService.getAccountsByClientId(clientId);
+        List<Account> accounts = accountService.getAccountsByClientId(clientId);
+        if (accounts.isEmpty()) {
+            throw new AccountNotFoundException("No accounts found for client ID: " + clientId);
+        }
+        return accounts;
     }
 
     @GetMapping("/{accountId}/transactions")
@@ -52,8 +57,8 @@ public class AccountController {
     )
     public List<Transaction> getTransactionHistory(
         @PathVariable UUID accountId,
-        @RequestParam(defaultValue = "0") @Min(0) int offset,
-        @RequestParam(defaultValue = "20") @Min(1) int limit
+        @RequestParam(defaultValue = "0") int offset,
+        @RequestParam(defaultValue = "20") int limit
     ) {
         return transactionService.getTransactions(accountId, offset, limit);
     }
